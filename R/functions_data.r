@@ -141,3 +141,14 @@ get_last_iteration <- function(path, x) {
     stop("File not found: ", posterior_path)
   }
 }
+
+fix_method_names <- function(df) {
+  df |>
+    mutate(
+      method = if_else(method == "FIREARMS", "Sharpshooting", method),
+      method = if_else(method == "FIXED WING", "fixedWing", method),
+      method = if_else(method == "HELICOPTER", "Helicopter", method),
+      method = if_else(method == "SNARE", "Snare", method),
+      method = if_else(method == "TRAPS", "Trap", method)
+    )
+}
