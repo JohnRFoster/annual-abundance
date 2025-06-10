@@ -151,24 +151,16 @@ data_obs <- get_obs_covars(file) |>
 data_all <- create_ml_data(data_joined, all_events_per_year, data_obs)
 
 if_dir <- "11_posterior"
-iterative_dir <- config$out_iterative
+top_dir <- config$out_iterative
+path <- file.path(top_dir, if_dir)
 
-posterior_path <- file.path(iterative_dir, if_dir, "modelData.rds")
-data_post_raw <- read_rds(posterior_path)
-
-data <- data_post_raw |>
+data_raw <- get_last_iteration(path, "modelData.rds")
+data <- data_raw |>
 	filter(end_dates <= cutoff_date) |>
-	mutate(
-		method = if_else(method == "FIREARMS", "Firearms", method),
-		method = if_else(method == "FIXED WING", "fixedWing", method),
-		method = if_else(method == "HELICOPTER", "Helicopter", method),
-		method = if_else(method == "SNARE", "Snare", method),
-		method = if_else(method == "TRAPS", "Trap", method),
-		year = year(end_dates)
-	)
+	mutate(year = year(end_dates)) |>
+	fix_method_names()
 
-posterior_path <- file.path(iterative_dir, if_dir, "densitySummaries.rds")
-density <- read_rds(posterior_path)
+density <- get_last_iteration(path, "densitySummaries.rds")
 
 bayes_estimates <- data |>
 	select(
