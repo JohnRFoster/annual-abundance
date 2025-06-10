@@ -15,7 +15,6 @@ config <- config::get(config = config_name)
 
 source("R/functions_data.R")
 source("R/functions_ml.R")
-source("R/ml_recipe.R")
 
 # ===================================================
 # Data ingest ----
@@ -35,22 +34,16 @@ data_obs <- get_obs_covars(file) |>
   )
 
 if_dir <- "11_posterior"
-top_dir <- config$out_dir
+top_dir <- config$out_iterative
+path <- file.path(top_dir, if_dir)
 
-posterior_path <- file.path(top_dir, if_dir, "modelData.rds")
-data <- read_rds(posterior_path) |>
+data_raw <- get_last_iteration(path, "modelData.rds")
+data <- data_raw |>
   filter(end_dates <= cutoff_date) |>
-  mutate(
-    method = if_else(method == "FIREARMS", "Firearms", method),
-    method = if_else(method == "FIXED WING", "fixedWing", method),
-    method = if_else(method == "HELICOPTER", "Helicopter", method),
-    method = if_else(method == "SNARE", "Snare", method),
-    method = if_else(method == "TRAPS", "Trap", method),
-    year = year(end_dates)
-  )
+  mutate(year = year(end_dates)) |>
+  fix_method_names()
 
-posterior_path <- file.path(top_dir, if_dir, "densitySummaries.rds")
-density <- read_rds(posterior_path)
+density <- get_last_iteration(path, "densitySummaries.rds")
 
 ## event metrics ----
 all_events_per_year <- create_all_events_per_year(data)
