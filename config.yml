@@ -1,0 +1,25 @@
+default:
+  eta: 0.3
+  interval: 4
+  dev: TRUE
+  informed: FALSE
+  n_iter: 1000
+  params_check: !expr c("beta_p","beta1","log_gamma","log_rho","phi_mu","psi_phi","log_nu","p_mu")
+  data_repo: "C:/Users/John.Foster/OneDrive - USDA/Desktop/fosteR/data-store"
+  out_iterative: "C:/Users/John.Foster/Downloads/iterativeFits2"
+  out_dir: "out"
+  
+  
+  out_delta: "C:/Users/John.Foster/Downloads/iterativeFits2"
+  first_fit: "256properties_uninformedPriors_combined"
+  file_mis: "insitu/MIS.Effort.Take.All.Methods.Daily.Events.01JUL2024.csv"
+  file_land: 'covariates/FINAL.Process.Model.Observation.Covariates.12Jan2018.csv'
+  file_post: "C:/Users/John.Foster/Downloads/22_properties_combined/posteriorSamples.rds"
+
+hpc_dev:
+  data_repo: "/lustrefs/ceah/feral-swine/data"
+  out_dir: "/lustrefs/ceah/feral-swine/property-fits/iterativeFits2"
+  out_ml: "/lustrefs/ceah/feral-swine/property-fits/ml"
+  out_delta: "/lustrefs/ceah/feral-swine/property-fits/deltaDensity"
+  out_eom: "/lustrefs/ceah/feral-swine/property-fits/effectOfMgmt"
+  n_iter: 50000
