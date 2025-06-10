@@ -132,3 +132,12 @@ create_timestep_df <- function(df) {
     ungroup() |>
     mutate(primary_period = primary_period - min(primary_period) + 1)
 }
+
+get_last_iteration <- function(path, x) {
+  posterior_path <- file.path(path, x)
+  if (file.exists(posterior_path)) {
+    readRDS(posterior_path)
+  } else {
+    stop("File not found: ", posterior_path)
+  }
+}
