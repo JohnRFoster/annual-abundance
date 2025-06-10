@@ -52,3 +52,7 @@ rsconnect/
 out/
 plots/
 data/
+
+# custom settings
+.lintr
+.Rprofile
