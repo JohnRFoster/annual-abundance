@@ -56,3 +56,4 @@ data/
 # custom settings
 .lintr
 .Rprofile
+settings.json
