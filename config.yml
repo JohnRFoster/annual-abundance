@@ -3,7 +3,7 @@ default:
   interval: 4
   dev: TRUE
   informed: FALSE
-  n_iter: 1000
+  n_iter: 20000
   params_check: !expr c("beta_p","beta1","log_gamma","log_rho","phi_mu","psi_phi","log_nu","p_mu")
   data_repo: "C:/Users/John.Foster/OneDrive - USDA/Desktop/fosteR/data-store"
   out_iterative: "C:/Users/John.Foster/Downloads/iterativeFits2"
@@ -18,8 +18,7 @@ default:
 
 hpc_dev:
   data_repo: "/lustrefs/ceah/feral-swine/data"
-  out_dir: "/lustrefs/ceah/feral-swine/property-fits/iterativeFits2"
+  out_iterative: "/lustrefs/ceah/feral-swine/property-fits/iterativeFits2"
   out_ml: "/lustrefs/ceah/feral-swine/property-fits/ml"
-  out_delta: "/lustrefs/ceah/feral-swine/property-fits/deltaDensity"
-  out_eom: "/lustrefs/ceah/feral-swine/property-fits/effectOfMgmt"
+  out_dir: "/lustrefs/ceah/feral-swine/property-fits/annualAbundance"
   n_iter: 50000
