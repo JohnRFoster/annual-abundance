@@ -44,10 +44,10 @@ all_years <- make_all_prop_years_gp(gp_data)
 time_join <- left_join(all_years, gp_data)
 
 # create the spatial distance matrix
-dist_spatial <- create_spatial_distance_matrix(time_join)
+dist_spatial <- create_spatial_distance_matrix(time_join, normalize = FALSE)
 
 # create the temporal distance matrix
-dist_time <- create_year_distance_matrix(time_join)
+dist_time <- create_year_distance_matrix(time_join, normalize = FALSE)
 
 # check matricies
 round(dist_spatial[1:10, 1:10], 2)
@@ -69,8 +69,6 @@ inits <- list(
   mu_t = rnorm(1),
   sigma_s = runif(1, 1, 10),
   sigma_t = runif(1, 1, 10),
-  tau_cov_s = runif(1),
-  tau_cov_t = runif(1),
   rho_s = runif(1),
   rho_t = runif(1),
   tau_obs = runif(1)
@@ -80,8 +78,7 @@ inits <- list(
 inits$cov_s <- c_expcov(
   dist_spatial,
   inits$rho_s,
-  inits$sigma_s,
-  inits$tau_cov_s
+  inits$sigma_s
 )
 inits$s <- t(chol(inits$cov_s)) %*% rnorm(constants$N)
 inits$s <- inits$s[, 1] # so can give nimble a vector rather than one-column matrix
@@ -89,8 +86,7 @@ inits$s <- inits$s[, 1] # so can give nimble a vector rather than one-column mat
 inits$cov_t <- c_expcov(
   dist_time,
   inits$rho_t,
-  inits$sigma_t,
-  inits$tau_cov_t
+  inits$sigma_t
 )
 inits$t <- t(chol(inits$cov_t)) %*% rnorm(constants$N)
 inits$t <- inits$t[, 1] # so can give nimble a vector rather than one-column matrix
