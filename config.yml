@@ -3,7 +3,7 @@ default:
   interval: 4
   dev: TRUE
   informed: FALSE
-  n_iter: 20000
+  n_iter: 10000
   params_check: !expr c("beta_p","beta1","log_gamma","log_rho","phi_mu","psi_phi","log_nu","p_mu")
   data_repo: "C:/Users/John.Foster/OneDrive - USDA/Desktop/fosteR/data-store"
   out_iterative: "C:/Users/John.Foster/Downloads/iterativeFits2"
