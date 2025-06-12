@@ -8,6 +8,7 @@ library(nimble)
 set.seed(920)
 
 source("R/functions_gp.R")
+source("R/nimble_gp.R")
 
 config_name <- "default"
 config <- config::get(config = config_name)
@@ -44,10 +45,10 @@ all_years <- make_all_prop_years_gp(gp_data)
 time_join <- left_join(all_years, gp_data)
 
 # create the spatial distance matrix
-dist_spatial <- create_spatial_distance_matrix(time_join, normalize = FALSE)
+dist_spatial <- create_spatial_distance_matrix(time_join, normalize = TRUE)
 
 # create the temporal distance matrix
-dist_time <- create_year_distance_matrix(time_join, normalize = FALSE)
+dist_time <- create_year_distance_matrix(time_join, normalize = TRUE)
 
 # check matricies
 round(dist_spatial[1:10, 1:10], 2)
@@ -65,12 +66,14 @@ data <- list(
 )
 
 inits <- list(
-  mu_s = rnorm(1),
-  mu_t = rnorm(1),
+  mu_s = 0,
+  mu_t = 0,
   sigma_s = runif(1, 1, 10),
   sigma_t = runif(1, 1, 10),
-  rho_s = runif(1),
-  rho_t = runif(1),
+  tau_s = runif(1),
+  tau_t = runif(1),
+  rho_s = 0.2,
+  rho_t = 0.2,
   tau_obs = runif(1)
 )
 
@@ -78,7 +81,8 @@ inits <- list(
 inits$cov_s <- c_expcov(
   dist_spatial,
   inits$rho_s,
-  inits$sigma_s
+  inits$sigma_s,
+  inits$tau_s
 )
 inits$s <- t(chol(inits$cov_s)) %*% rnorm(constants$N)
 inits$s <- inits$s[, 1] # so can give nimble a vector rather than one-column matrix
@@ -86,17 +90,20 @@ inits$s <- inits$s[, 1] # so can give nimble a vector rather than one-column mat
 inits$cov_t <- c_expcov(
   dist_time,
   inits$rho_t,
-  inits$sigma_t
+  inits$sigma_t,
+  inits$tau_t
 )
 inits$t <- t(chol(inits$cov_t)) %*% rnorm(constants$N)
 inits$t <- inits$t[, 1] # so can give nimble a vector rather than one-column matrix
 
 model <- nimbleModel(code, constants = constants, data = data, inits = inits)
 model$initializeInfo()
+summary(model$mu_x)
+str(inits)
 
 c_model <- compileNimble(model)
-conf <- configureMCMC(model)
 
+conf <- configureMCMC(model)
 conf$addMonitors("mu_x")
 
 mcmc <- buildMCMC(conf)
